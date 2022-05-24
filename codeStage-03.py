@@ -78,15 +78,14 @@ class Messung(threading.Thread):
         try:
             while True:
                 abstand = distanz()
-                print('Gemessene Entfernung = %.1f cm' % abstand)
-                if abstand > 50:
-                    print('Leer')
+                print('Gemessene Entfernung: %.1f cm' % abstand)
+                if (abstand > 50):
+                    print('Kanban-Behälter ist leer.')
                     updateLeer(19)
-
-                elif abstand < 50:
-                    print('Voll')
+                elif (abstand < 50):
+                    print('Kanban-Behälter ist gefüllt.')
                     updateVoll(18)
-                time.sleep(10)
+                time.sleep(2)
 
             # Beim Abbruch durch STRG+C resetten
         except KeyboardInterrupt:

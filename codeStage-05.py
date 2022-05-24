@@ -84,16 +84,14 @@ class Waage(threading.Thread):
                 print('Kanban-Behälter Inhalt:', val, 'Gramm')
                 if(val<50):
                     print('Kanban-Behälter ist leer.')
-                    if(root.willdispatch() is None):
-                        updateLeer(20)
+                    updateLeer(20)
                 elif(val>50):
                     print('Kanban-Behälter ist voll.')
-                    if(root.willdispatch() is None):
-                        updateVoll(20)
+                    updateVoll(20)
 
                 hx.power_down()
                 hx.power_up()
-                time.sleep(0.1)
+                time.sleep(2)
 
             # Beim Abbruch durch STRG+C resetten
         except KeyboardInterrupt:
