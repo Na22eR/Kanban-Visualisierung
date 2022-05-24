@@ -81,12 +81,14 @@ class Waage(threading.Thread):
         try:
             while True:
                 val = max(0, int(hx.get_weight(5)))
-                print('Kanban-Behälter Inhalt: %5i Gramm') % val
+                print('Kanban-Behälter Inhalt:', val, 'Gramm')
                 if(val<50):
                     print('Kanban-Behälter ist leer.')
+                    root.willdispatch()
                     updateLeer(20)
                 elif(val>50):
                     print('Kanban-Behälter ist voll.')
+                    root.willdispatch()
                     updateVoll(20)
 
                 hx.power_down()
