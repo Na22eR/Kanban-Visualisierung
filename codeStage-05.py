@@ -35,7 +35,7 @@ def updateLeer(channel):
     Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
     GPIO.output(20, GPIO.HIGH)
     GPIO.output(21, GPIO.LOW)
-    # sendEMail('***REMOVED***', '***REMOVED***', "Teeeäst", "Python sagt Hi", "<***REMOVED***>", "<***REMOVED***>")
+    # sendEMail('Absender@mail.com', 'passwort', "Betreff", "Text", "<Absender@mail.com>", "<Empfänger@mail.com>")
 
 def updateVoll(channel):
     Kanban_Leer.grid_forget()
@@ -84,12 +84,12 @@ class Waage(threading.Thread):
                 print('Kanban-Behälter Inhalt:', val, 'Gramm')
                 if(val<50):
                     print('Kanban-Behälter ist leer.')
-                    root.willdispatch()
-                    updateLeer(20)
+                    if(root.willdispatch() is None):
+                        updateLeer(20)
                 elif(val>50):
                     print('Kanban-Behälter ist voll.')
-                    root.willdispatch()
-                    updateVoll(20)
+                    if(root.willdispatch() is None):
+                        updateVoll(20)
 
                 hx.power_down()
                 hx.power_up()
