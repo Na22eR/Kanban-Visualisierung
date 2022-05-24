@@ -7,7 +7,7 @@ import threading
 #  Fenster einrichten
 root = Tk()                                          # Fenster
 root.geometry('1600x900')                            # Größe
-root.wm_title("Kanbanvisualisierung")                # Titel
+root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
 
 #  GPIO Pins einrichten
@@ -78,7 +78,7 @@ class Messung(threading.Thread):
         try:
             while True:
                 abstand = distanz()
-                print("Gemessene Entfernung = %.1f cm" % abstand)
+                print('Gemessene Entfernung = %.1f cm' % abstand)
                 if abstand > 50:
                     print('Leer')
                     updateLeer(19)
@@ -90,7 +90,7 @@ class Messung(threading.Thread):
 
             # Beim Abbruch durch STRG+C resetten
         except KeyboardInterrupt:
-            print("Messung vom User gestoppt")
+            print('Messung vom User gestoppt')
             GPIO.cleanup()
 
 
@@ -110,6 +110,7 @@ Behaelter.grid(row=1, column=1, padx=10, pady=10)
 Kanban_Voll.grid(row=1, column=1, padx=10, pady=10, sticky='n')
 Kanban_Leer.grid(row=1, column=1, padx=10, pady=10, sticky='n')
 Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
+Label(frame, text='Kanbanbehälter').grid(row=2, column=1, padx=10, pady=10)
 
 frame.pack(expand=True)
 
@@ -117,4 +118,4 @@ frame.pack(expand=True)
 #  Main Methode
 if __name__ == '__main__':
     messen = Messung()
-    root.mainloop()   
+    root.mainloop()

@@ -11,7 +11,7 @@ import ssl
 #  Fenster einrichten
 root = Tk()                                          # Fenster
 root.geometry('1600x900')                            # Größe
-root.wm_title("Kanbanvisualisierung")                # Titel
+root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
 
 #  GPIO Pins einrichten
@@ -69,11 +69,6 @@ class Waage(threading.Thread):
     def callback(self):
         self.root.quit()
 
-    @staticmethod
-    def cleanAndExit():
-        GPIO.cleanup()
-        sys.exit()
-
     def run(self):
         hx = HX711(5, 6)
         hx.set_reading_format("MSB", "MSB")
@@ -81,17 +76,17 @@ class Waage(threading.Thread):
         hx.reset()
         hx.tare()
 
-        print("Kalibrierung abgeschlossen!")
+        print('Kalibrierung abgeschlossen!')
 
         try:
             while True:
                 val = max(0, int(hx.get_weight(5)))
-                print("Gewicht in Gramm: ", val)
+                print('Kanban-Behälter Inhalt: %5i Gramm') % val
                 if(val<50):
-                    print('Behälter leer')
+                    print('Kanban-Behälter ist leer.')
                     updateLeer(20)
                 elif(val>50):
-                    print('Behälter voll')
+                    print('Kanban-Behälter ist voll.')
                     updateVoll(20)
 
                 hx.power_down()
@@ -100,8 +95,8 @@ class Waage(threading.Thread):
 
             # Beim Abbruch durch STRG+C resetten
         except KeyboardInterrupt:
-            print("Messung vom User gestoppt")
-            self.cleanAndExit()
+            print('Messung vom User gestoppt.')
+            GPIO.cleanup()
 
 
 #   Definieren GUI-Elemente
@@ -120,6 +115,7 @@ Behaelter.grid(row=1, column=1, padx=10, pady=10)
 Kanban_Voll.grid(row=1, column=1, padx=10, pady=10, sticky='n')
 Kanban_Leer.grid(row=1, column=1, padx=10, pady=10, sticky='n')
 Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
+Label(frame, text='Kanbanbehälter').grid(row=2, column=1, padx=10, pady=10)
 
 frame.pack(expand=True)
 

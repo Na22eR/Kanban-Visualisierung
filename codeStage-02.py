@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 #  Fenster einrichten
 root = Tk()                                          # Fenster
 root.geometry('1600x900')                            # Größe
-root.wm_title("Kanbanvisualisierung")                # Titel
+root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
 
 #  GPIO Pins einrichten
@@ -81,4 +81,4 @@ frame.pack(expand=True)
 
 #  Main Methode
 if __name__ == '__main__':
-    root.mainloop()       
+    root.mainloop()
