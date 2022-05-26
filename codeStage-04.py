@@ -36,15 +36,6 @@ def updateVoll(channel):
     GPIO.output(21, GPIO.HIGH)
     GPIO.output(20, GPIO.LOW)
 
-
-#  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING)
-GPIO.add_event_detect(19, GPIO.RISING)
-GPIO.add_event_callback(18, updateVoll)
-GPIO.add_event_callback(19, updateLeer)
-
-
-
 def wiegen():
     hx = HX711(5, 6)
     hx.set_reading_format("MSB", "MSB")
@@ -69,13 +60,20 @@ def wiegen():
             hx.power_up()
             time.sleep(2)
 
-            # Beim Abbruch durch STRG+C resetten
+    # Beim Abbruch durch STRG+C resetten
     except KeyboardInterrupt:
         print('Messung vom User gestoppt.')
         GPIO.cleanup()
 
+
+#  Separater Thread für Waage
 secondaryThread = Thread(target=wiegen)
 
+#  Event detection & Callback Funktion
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, updateVoll)
+GPIO.add_event_callback(19, updateLeer)
 
 #   Definieren GUI-Elemente
 frame = Frame(root, width=400, height=400)
