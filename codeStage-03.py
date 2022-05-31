@@ -1,7 +1,7 @@
 from tkinter import *
 import RPi.GPIO as GPIO
 import time
-import threading
+from threading import Thread
 
 
 #  Fenster einrichten
@@ -58,40 +58,33 @@ def distanz():
 
     return distanz
 
+def messen():
+    try:
+        while True:
+            abstand = distanz()
+            print('Gemessene Entfernung: %.1f cm' % abstand)
+            if (abstand > 50):
+                print('Kanban-Behälter ist leer.')
+                updateLeer(19)
+            elif (abstand < 50):
+                print('Kanban-Behälter ist gefüllt.')
+                updateVoll(18)
+            time.sleep(2)
+
+    # Beim Abbruch durch STRG+C resetten
+    except KeyboardInterrupt:
+        print('Messung vom User gestoppt')
+        GPIO.cleanup()
+
+
+#  Separater Thread für Waage
+secondaryThread = Thread(target=messen)
 
 #  Event detection & Callback Funktion
 GPIO.add_event_detect(18, GPIO.RISING)
 GPIO.add_event_detect(19, GPIO.RISING)
 GPIO.add_event_callback(18, updateVoll)
 GPIO.add_event_callback(19, updateLeer)
-
-
-class Messung(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.start()
-
-    def callback(self):
-        self.root.quit()
-
-    def run(self):
-        try:
-            while True:
-                abstand = distanz()
-                print('Gemessene Entfernung: %.1f cm' % abstand)
-                if (abstand > 50):
-                    print('Kanban-Behälter ist leer.')
-                    updateLeer(19)
-                elif (abstand < 50):
-                    print('Kanban-Behälter ist gefüllt.')
-                    updateVoll(18)
-                time.sleep(2)
-
-            # Beim Abbruch durch STRG+C resetten
-        except KeyboardInterrupt:
-            print('Messung vom User gestoppt')
-            GPIO.cleanup()
-
 
 #   Definieren GUI-Elemente
 frame = Frame(root, width=400, height=400)
@@ -116,5 +109,5 @@ frame.pack(expand=True)
 
 #  Main Methode
 if __name__ == '__main__':
-    messen = Messung()
+    secondaryThread.start()
     root.mainloop()

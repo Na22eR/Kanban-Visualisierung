@@ -2,7 +2,7 @@ from tkinter import *
 import RPi.GPIO as GPIO
 import sys
 import time
-import threading
+from threading import Thread
 from hx711 import HX711
 
 
@@ -36,51 +36,44 @@ def updateVoll(channel):
     GPIO.output(21, GPIO.HIGH)
     GPIO.output(20, GPIO.LOW)
 
+def wiegen():
+    hx = HX711(5, 6)
+    hx.set_reading_format("MSB", "MSB")
+    hx.set_reference_unit(458)
+    hx.reset()
+    hx.tare()
+
+    print('Kalibrierung abgeschlossen!')
+
+    try:
+        while True:
+            val = max(0, int(hx.get_weight(5)))
+            print('Kanban-Behälter Inhalt:', val, 'Gramm')
+            if (val < 50):
+                print('Kanban-Behälter ist leer.')
+                updateLeer(20)
+            elif (val > 50):
+                print('Kanban-Behälter ist voll.')
+                updateVoll(20)
+
+            hx.power_down()
+            hx.power_up()
+            time.sleep(2)
+
+    # Beim Abbruch durch STRG+C resetten
+    except KeyboardInterrupt:
+        print('Messung vom User gestoppt.')
+        GPIO.cleanup()
+
+
+#  Separater Thread für Waage
+secondaryThread = Thread(target=wiegen)
 
 #  Event detection & Callback Funktion
 GPIO.add_event_detect(18, GPIO.RISING)
 GPIO.add_event_detect(19, GPIO.RISING)
 GPIO.add_event_callback(18, updateVoll)
 GPIO.add_event_callback(19, updateLeer)
-
-
-class Waage(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.start()
-
-    def callback(self):
-        self.root.quit()
-
-    def run(self):
-        hx = HX711(5, 6)
-        hx.set_reading_format("MSB", "MSB")
-        hx.set_reference_unit(458)
-        hx.reset()
-        hx.tare()
-
-        print('Kalibrierung abgeschlossen!')
-
-        try:
-            while True:
-                val = max(0, int(hx.get_weight(5)))
-                print('Kanban-Behälter Inhalt:', val, 'Gramm')
-                if (val < 50):
-                    print('Kanban-Behälter ist leer.')
-                    updateLeer(20)
-                elif (val > 50):
-                    print('Kanban-Behälter ist voll.')
-                    updateVoll(20)
-
-                hx.power_down()
-                hx.power_up()
-                time.sleep(2)
-
-            # Beim Abbruch durch STRG+C resetten
-        except KeyboardInterrupt:
-            print('Messung vom User gestoppt.')
-            GPIO.cleanup()
-
 
 #   Definieren GUI-Elemente
 frame = Frame(root, width=400, height=400)
@@ -104,5 +97,5 @@ frame.pack(expand=True)
 
 
 if __name__ == '__main__':
-    wiegen = Waage()
+    secondaryThread.start()
     root.mainloop()
