@@ -114,5 +114,5 @@ frame.pack(expand=True)
 
 
 if __name__ == '__main__':
-    wiegen = Waage()
+    secondaryThread.start()
     root.mainloop()                                 # GUI Update-Loop
