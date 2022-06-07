@@ -31,3 +31,18 @@ hx.set_reference_unit(458)
 hx.reset()
 hx.tare()
 print('Kalibrierung abgeschlossen!')
+
+#  Endlosschleife der Waage
+while True:
+    val = max(0, int(hx.get_weight(5)))
+    print('Kanban-Behälter Inhalt:', val, 'Gramm')
+    if (val < 50):
+        print('Kanban-Behälter ist leer.')
+        update(19)
+    elif (val > 50):
+        print('Kanban-Behälter ist voll.')
+        update(18)
+
+    hx.power_down()
+    hx.power_up()
+    time.sleep(2)
