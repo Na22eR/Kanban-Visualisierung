@@ -18,8 +18,9 @@ def update(channel):
         GPIO.output(21, GPIO.HIGH)
         GPIO.output(20, GPIO.LOW)
 
-while True:
-    if GPIO.input(19) == GPIO.HIGH:
-        update(19)
-    if GPIO.input(18) == GPIO.HIGH:
-        update(18)
+#  Event detection & Callback Funktion
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, update)
+GPIO.add_event_callback(19, update)
+
