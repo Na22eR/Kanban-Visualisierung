@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
+import hx711.HX711 as HX711
 import time
-from hx711 import HX711
 
 #  GPIO Pins einrichten
 GPIO.setmode(GPIO.BCM)                               # GPIO Modus (BOARD / BCM)
@@ -10,19 +10,17 @@ GPIO.setup(20, GPIO.OUT)                             # Rote Lampe
 GPIO.setup(21, GPIO.OUT)                             # Gelbe Lampe
 
 #  Aktualisierungsmethoden
-def updateLeer(channel):
+def updateLeer():
     GPIO.output(20, GPIO.HIGH)
     GPIO.output(21, GPIO.LOW)
 
-def updateVoll(channel):
+def updateVoll():
     GPIO.output(21, GPIO.HIGH)
     GPIO.output(20, GPIO.LOW)
 
 #  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING)
-GPIO.add_event_detect(19, GPIO.RISING)
-GPIO.add_event_callback(18, updateVoll)
-GPIO.add_event_callback(19, updateLeer)
+GPIO.add_event_detect(18, GPIO.RISING, callback=updateVoll())
+GPIO.add_event_detect(19, GPIO.RISING, callback=updateLeer())
 
 #  Voreinstellungen Gewichtssensor
 hx = HX711(5, 6)
@@ -38,10 +36,10 @@ while True:
     print('Kanban-Behälter Inhalt:', val, 'Gramm')
     if (val < 50):
         print('Kanban-Behälter ist leer.')
-        updateLeer(20)
+        updateLeer()
     elif (val > 50):
         print('Kanban-Behälter ist voll.')
-        updateVoll(20)
+        updateVoll()
 
     hx.power_down()
     hx.power_up()

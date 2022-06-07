@@ -13,7 +13,7 @@ GPIO.setup(17, GPIO.OUT)                             # Ultraschallsensor Auslös
 GPIO.setup(24, GPIO.IN)                              # Ultraschallsensor Echo
 
 #  Aktualisierungsmethoden
-def updateLeer(channel):
+def updateLeer():
     Kanban_Voll.grid(row=1, column=1, padx=10, pady=10, sticky='n')
     Kanban_Leer.grid(row=1, column=1, padx=10, pady=10, sticky='n')
     Lampe_Aus.grid_forget()
@@ -21,7 +21,7 @@ def updateLeer(channel):
     GPIO.output(20, GPIO.HIGH)
     GPIO.output(21, GPIO.LOW)
 
-def updateVoll(channel):
+def updateVoll():
     Kanban_Leer.grid_forget()
     Lampe_Aus.grid_forget()
     Lampe_Aus.grid(row=0, column=0, padx=10, pady=10)
@@ -29,10 +29,8 @@ def updateVoll(channel):
     GPIO.output(20, GPIO.LOW)
 
 #  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING)
-GPIO.add_event_detect(19, GPIO.RISING)
-GPIO.add_event_callback(18, updateVoll)
-GPIO.add_event_callback(19, updateLeer)
+GPIO.add_event_detect(18, GPIO.RISING, callback=updateVoll())
+GPIO.add_event_detect(19, GPIO.RISING, callback=updateLeer())
 
 def distanz():
     GPIO.output(17, True)
@@ -61,10 +59,10 @@ def messen():
             print('Gemessene Entfernung: %.1f cm' % abstand)
             if (abstand > 50):
                 print('Kanban-Behälter ist leer.')
-                updateLeer(19)
+                updateLeer()
             elif (abstand < 50):
                 print('Kanban-Behälter ist gefüllt.')
-                updateVoll(18)
+                updateVoll()
             time.sleep(2)
 
     # Beim Abbruch durch STRG+C resetten
