@@ -9,12 +9,17 @@ GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Knopf gelbe Lampe
 GPIO.setup(20, GPIO.OUT)                             # Rote Lampe
 GPIO.setup(21, GPIO.OUT)                             # Gelbe Lampe
 
-while True:
-    if GPIO.input(19) == GPIO.HIGH:
+#  Aktualisierungsmethode
+def update(channel):
+    if channel == 19:
         GPIO.output(20, GPIO.HIGH)
         GPIO.output(21, GPIO.LOW)
-    if GPIO.input(18) == GPIO.HIGH:
+    if channel == 18:
         GPIO.output(21, GPIO.HIGH)
         GPIO.output(20, GPIO.LOW)
 
-GPIO.cleanup()
+#  Event detection & Callback Funktion
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, update)
+GPIO.add_event_callback(19, update)

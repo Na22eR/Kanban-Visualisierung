@@ -11,18 +11,21 @@ GPIO.setup(21, GPIO.OUT)                             # Gelbe Lampe
 GPIO.setup(17, GPIO.OUT)                             # Ultraschallsensor Auslöser
 GPIO.setup(24, GPIO.IN)                              # Ultraschallsensor Echo
 
-#  Aktualisierungsmethoden
-def updateLeer():
-    GPIO.output(20, GPIO.HIGH)
-    GPIO.output(21, GPIO.LOW)
-
-def updateVoll():
-    GPIO.output(21, GPIO.HIGH)
-    GPIO.output(20, GPIO.LOW)
+#  Aktualisierungsmethode
+def update(channel):
+    if channel == 19:
+        GPIO.output(20, GPIO.HIGH)
+        GPIO.output(21, GPIO.LOW)
+    if channel == 18:
+        GPIO.output(21, GPIO.HIGH)
+        GPIO.output(20, GPIO.LOW)
 
 #  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING, callback=updateVoll())
-GPIO.add_event_detect(19, GPIO.RISING, callback=updateLeer())
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, update)
+GPIO.add_event_callback(19, update)
+
 def distanz():
     GPIO.output(17, True)
 
@@ -49,8 +52,8 @@ while True:
     print('Gemessene Entfernung: %.1f cm' % abstand)
     if (abstand > 50):
         print('Kanban-Behälter ist leer.')
-        updateLeer()
+        update(19)
     elif (abstand < 50):
         print('Kanban-Behälter ist gefüllt.')
-        updateVoll()
+        update(18)
     time.sleep(2)

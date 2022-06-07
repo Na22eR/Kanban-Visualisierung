@@ -3,34 +3,33 @@ import RPi.GPIO as GPIO
 import time
 from threading import Thread
 
-#  GPIO Pins einrichten
-GPIO.setmode(GPIO.BCM)                               # GPIO Modus (BOARD / BCM)
-GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Knopf rote Lampe
-GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Knopf gelbe Lampe
-GPIO.setup(20, GPIO.OUT)                             # Rote Lampe
-GPIO.setup(21, GPIO.OUT)                             # Gelbe Lampe
-GPIO.setup(17, GPIO.OUT)                             # Ultraschallsensor Auslöser
-GPIO.setup(24, GPIO.IN)                              # Ultraschallsensor Echo
-
-#  Aktualisierungsmethoden
-def updateLeer():
-    Kanban_Voll.grid(row=1, column=1, padx=10, pady=10, sticky='n')
-    Kanban_Leer.grid(row=1, column=1, padx=10, pady=10, sticky='n')
-    Lampe_Aus.grid_forget()
-    Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
-    GPIO.output(20, GPIO.HIGH)
-    GPIO.output(21, GPIO.LOW)
-
-def updateVoll():
-    Kanban_Leer.grid_forget()
-    Lampe_Aus.grid_forget()
-    Lampe_Aus.grid(row=0, column=0, padx=10, pady=10)
-    GPIO.output(21, GPIO.HIGH)
-    GPIO.output(20, GPIO.LOW)
+#  Aktualisierungsmethode
+def update(channel):
+    if channel == 19:
+        Kanban_Voll.grid(row=1, column=1, padx=10, pady=10, sticky='n')
+        Kanban_Leer.grid(row=1, column=1, padx=10, pady=10, sticky='n')
+        Lampe_Aus.grid_forget()
+        Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
+        GPIO.output(20, GPIO.HIGH)
+        GPIO.output(21, GPIO.LOW)
+    if channel == 18:
+        Kanban_Leer.grid_forget()
+        Lampe_Aus.grid_forget()
+        Lampe_Aus.grid(row=0, column=0, padx=10, pady=10)
+        GPIO.output(21, GPIO.HIGH)
+        GPIO.output(20, GPIO.LOW)
 
 #  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING, callback=updateVoll())
-GPIO.add_event_detect(19, GPIO.RISING, callback=updateLeer())
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, update)
+GPIO.add_event_callback(19, update)
+
+#  Event detection & Callback Funktion
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, update)
+GPIO.add_event_callback(19, update)
 
 def distanz():
     GPIO.output(17, True)
@@ -59,10 +58,10 @@ def messen():
             print('Gemessene Entfernung: %.1f cm' % abstand)
             if (abstand > 50):
                 print('Kanban-Behälter ist leer.')
-                updateLeer()
+                update(19)
             elif (abstand < 50):
                 print('Kanban-Behälter ist gefüllt.')
-                updateVoll()
+                update(18)
             time.sleep(2)
 
     # Beim Abbruch durch STRG+C resetten

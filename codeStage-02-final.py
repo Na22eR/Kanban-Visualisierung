@@ -9,18 +9,20 @@ GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Knopf gelbe Lampe
 GPIO.setup(20, GPIO.OUT)                             # Rote Lampe
 GPIO.setup(21, GPIO.OUT)                             # Gelbe Lampe
 
-#  Aktualisierungsmethoden
-def updateLeer():
-    GPIO.output(20, GPIO.HIGH)
-    GPIO.output(21, GPIO.LOW)
-
-def updateVoll():
-    GPIO.output(21, GPIO.HIGH)
-    GPIO.output(20, GPIO.LOW)
+#  Aktualisierungsmethode
+def update(channel):
+    if channel == 19:
+        GPIO.output(20, GPIO.HIGH)
+        GPIO.output(21, GPIO.LOW)
+    if channel == 18:
+        GPIO.output(21, GPIO.HIGH)
+        GPIO.output(20, GPIO.LOW)
 
 #  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING, callback=updateVoll())
-GPIO.add_event_detect(19, GPIO.RISING, callback=updateLeer())
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
+GPIO.add_event_callback(18, update)
+GPIO.add_event_callback(19, update)
 
 #  Voreinstellungen Gewichtssensor
 hx = HX711(5, 6)
@@ -36,10 +38,10 @@ while True:
     print('Kanban-Behälter Inhalt:', val, 'Gramm')
     if (val < 50):
         print('Kanban-Behälter ist leer.')
-        updateLeer()
+        update(19)
     elif (val > 50):
         print('Kanban-Behälter ist voll.')
-        updateVoll()
+        update(18)
 
     hx.power_down()
     hx.power_up()

@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-import hx711.HX711 as HX711
+from hx711 import HX711
 import time
 
 #  GPIO Pins einrichten
@@ -19,5 +19,5 @@ def update(channel):
         GPIO.output(20, GPIO.LOW)
 
 #  Event detection & Callback Funktion
-GPIO.add_event_detect(18, GPIO.RISING, callback=update())
-GPIO.add_event_detect(19, GPIO.RISING, callback=update())
+GPIO.add_event_detect(18, GPIO.RISING)
+GPIO.add_event_detect(19, GPIO.RISING)
