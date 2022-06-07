@@ -20,10 +20,6 @@ def update(channel):
 
 while True:
     if GPIO.input(19) == GPIO.HIGH:
-        GPIO.output(20, GPIO.HIGH)
-        GPIO.output(21, GPIO.LOW)
+        update(19)
     if GPIO.input(18) == GPIO.HIGH:
-        GPIO.output(21, GPIO.HIGH)
-        GPIO.output(20, GPIO.LOW)
-
-GPIO.cleanup()
+        update(18)
