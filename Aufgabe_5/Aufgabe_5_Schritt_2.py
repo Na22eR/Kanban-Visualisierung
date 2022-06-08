@@ -23,7 +23,6 @@ def update(channel):
         Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
         GPIO.output(20, GPIO.HIGH)
         GPIO.output(21, GPIO.LOW)
-        sendEMail('Absender@mail.com', 'passwort', "Betreff", "Text", "<Absender@mail.com>", "<Empfänger@mail.com>")
     if channel == 18:
         Kanban_Leer.grid_forget()
         Lampe_Aus.grid_forget()
@@ -107,15 +106,6 @@ frame.pack(expand=True)
 tlsContext = ssl.create_default_context()
 defaultSMTP = 'smtp.gmail.com'
 defaultPort = 587
-
-def sendEMail(username, password, subject, text, mFrom, mTo):
-    server = smtplib.SMTP(defaultSMTP, defaultPort)
-    server.starttls(context=tlsContext)
-    server.login(username, password)
-    data = 'From:%s\nTo:%s\nSubject:%s\n\n%s' % (mFrom, mTo, subject, text)
-    server.sendmail(mFrom, mTo, data.encode('utf-8'))
-    server.quit()
-    print('E-Mail erfolgreich abgesendet.')
 
 #  Main Methode
 if __name__ == '__main__':

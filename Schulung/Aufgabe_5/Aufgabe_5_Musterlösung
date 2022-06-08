@@ -23,7 +23,8 @@ def update(channel):
         Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
         GPIO.output(20, GPIO.HIGH)
         GPIO.output(21, GPIO.LOW)
-        sendEMail('Absender@mail.com', 'passwort', "Betreff", "Text", "<Absender@mail.com>", "<Empfänger@mail.com>")
+        sendEMail('Absender@mail.com', 'passwort', "Muster-Betreff", "Muster-Text",
+        "<Absender@mail.com>", "<Empfänger@mail.com>")
     if channel == 18:
         Kanban_Leer.grid_forget()
         Lampe_Aus.grid_forget()
