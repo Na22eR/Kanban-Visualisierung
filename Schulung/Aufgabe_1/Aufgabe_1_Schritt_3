@@ -1,0 +1,8 @@
+import RPi.GPIO as GPIO
+#------------------------------------------------Schritt 3------------------------------------------------#
+#  GPIO Pins einrichten
+GPIO.setmode(GPIO.BCM)                               # GPIO Modus (BOARD / BCM)
+GPIO.setup(19, GPIO.IN, ____________=_____________)  # Knopf rote Lampe
+GPIO.setup(18, GPIO.IN, ____________=_____________)  # Knopf gelbe Lampe
+GPIO.setup(20, GPIO.OUT)                             # Rote Lampe
+GPIO.setup(21, GPIO.OUT)                             # Gelbe Lampe
