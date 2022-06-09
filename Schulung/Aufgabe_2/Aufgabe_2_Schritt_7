@@ -34,7 +34,7 @@ print('Kalibrierung abgeschlossen!')
 #------------------------------------------------Schritt 7------------------------------------------------#
 #  Endlosschleife der Waage
 while True:
-    val = max(0, int(hx.get_weight(5)))
+    val = int(hx.get_weight(5))
     print('Kanban-Behälter Inhalt:'', val, 'Gramm')
     if (val < 50):
         print('Kanban-Behälter ist leer.')
