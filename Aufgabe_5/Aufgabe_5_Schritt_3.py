@@ -1,6 +1,6 @@
-from tkinter import *
 import RPi.GPIO as GPIO
 import time
+from tkinter import *
 from threading import Thread
 import smtplib
 import ssl

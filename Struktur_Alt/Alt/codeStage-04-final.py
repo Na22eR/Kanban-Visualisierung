@@ -1,7 +1,7 @@
-from tkinter import *
 import RPi.GPIO as GPIO
 import time
 from threading import Thread
+from tkinter import *
 
 #  Aktualisierungsmethode
 def update(channel):
