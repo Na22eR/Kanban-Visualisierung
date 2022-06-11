@@ -47,22 +47,31 @@ def distanz():
 
     return distanz
 
-#  Endlosschleife Ultraschallsensor
-while True:
-    abstand = distanz()
-    print('Gemessene Entfernung: %.1f cm' % abstand)
-    if (abstand > 50):
-        print('Kanban-Behälter ist leer.')
-        update(19)
-    elif (abstand < 50):
-        print('Kanban-Behälter ist gefüllt.')
-        update(18)
-    time.sleep(2)
+def messen():
+    while True:
+        abstand = distanz()
+        print('Gemessene Entfernung: %.1f cm' % abstand)
+        if (abstand > 50):
+            print('Kanban-Behälter ist leer.')
+            update(19)
+        elif (abstand < 50):
+            print('Kanban-Behälter ist gefüllt.')
+            update(18)
+        time.sleep(2)
+
+#  Separater Thread für den Ultraschallsensor
+secondaryThread = Thread(target=messen)
+secondaryThread.start()
 
 #  Fenster einrichten
 root = Tk()                                          # Fenster
 root.geometry('1600x900')                            # Größe
-root.title('Kanbanvisualisierung')                   # Titel
+root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
+#------------------------------------------------Schritt 4------------------------------------------------#
+#   Definieren GUI-Elemente
+framePacker = Frame(root)
+Behaelter = Frame(framePacker, width=100, height=200, bg='black')
+Kanban_Voll = Frame(framePacker, width=90, height=195, bg='blue')
 
 root.mainloop()

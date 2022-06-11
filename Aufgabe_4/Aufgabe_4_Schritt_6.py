@@ -48,24 +48,18 @@ def distanz():
     return distanz
 
 def messen():
-    try:
-        while True:
-            abstand = distanz()
-            print('Gemessene Entfernung: %.1f cm' % abstand)
-            if (abstand > 50):
-                print('Kanban-Behälter ist leer.')
-                update(19)
-            elif (abstand < 50):
-                print('Kanban-Behälter ist gefüllt.')
-                update(18)
-            time.sleep(2)
+    while True:
+        abstand = distanz()
+        print('Gemessene Entfernung: %.1f cm' % abstand)
+        if (abstand > 50):
+            print('Kanban-Behälter ist leer.')
+            update(19)
+        elif (abstand < 50):
+            print('Kanban-Behälter ist gefüllt.')
+            update(18)
+        time.sleep(2)
 
-    # Beim Abbruch durch STRG+C resetten
-    except KeyboardInterrupt:
-        print('Messung vom User gestoppt')
-        GPIO.cleanup()
-
-#  Separater Thread für Waage
+#  Separater Thread für den Ultraschallsensor
 secondaryThread = Thread(target=messen)
 secondaryThread.start()
 
@@ -76,22 +70,22 @@ root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
 
 #   Definieren GUI-Elemente
-frame = Frame(root, width=400, height=400)
-Rotes_Licht = Frame(frame, width=50, height=50, bg='red')
-Gruenes_Licht = Frame(frame, width=50, height=50, bg='yellow')
-Behaelter = Frame(frame, width=100, height=200, bg='black')
-Kanban_Voll = Frame(frame, width=90, height=195, bg='blue')
-Kanban_Leer = Frame(frame, width=90, height=150, bg='grey')
-Lampe_Aus = Frame(frame, width=50, height=50, bg='black')
+framePacker = Frame(root)
+Behaelter = Frame(framePacker, width=100, height=200, bg='black')
+Kanban_Voll = Frame(framePacker, width=90, height=195, bg='blue')
+Kanban_Leer = Frame(framePacker, width=90, height=150, bg='grey')
+Rotes_Licht = Frame(framePacker, width=50, height=50, bg='red')
+Gelbes_Licht = Frame(framePacker, width=50, height=50, bg='yellow')
+Lampe_Aus = Frame(framePacker, width=50, height=50, bg='black')
 
 # Platzieren GUI-Elemente auf Grid
-Rotes_Licht.grid(row=0, column=0, padx=10, pady=10)
-Gruenes_Licht.grid(row=0, column=2, padx=10, pady=10)
 Behaelter.grid(row=1, column=1, padx=10, pady=10)
 Kanban_Voll.grid(row=1, column=1, padx=10, pady=10, sticky='n')
 Kanban_Leer.grid(row=1, column=1, padx=10, pady=10, sticky='n')
+Rotes_Licht.grid(row=0, column=0, padx=10, pady=10)
+Gelbes_Licht.grid(row=0, column=2, padx=10, pady=10)
 Lampe_Aus.grid(row=0, column=2, padx=10, pady=10)
-Label(frame, text='Kanbanbehälter').grid(row=2, column=1, padx=10, pady=10)
-frame.pack(expand=True)
+Label(framePacker, text='Kanbanbehälter').grid(row=2, column=1, padx=10, pady=10)
+framePacker.pack(expand=True)
 
 root.mainloop()

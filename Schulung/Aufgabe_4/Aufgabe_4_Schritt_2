@@ -58,11 +58,11 @@ while True:
         print('Kanban-Behälter ist gefüllt.')
         update(18)
     time.sleep(2)
-
+#------------------------------------------------Schritt 2------------------------------------------------#
 #  Fenster einrichten
-root = Tk()                                          # Fenster
+root = ____                                          # Fenster
 root.geometry('1600x900')                            # Größe
 root.title('Kanbanvisualisierung')                   # Titel
-root.config(background="#FFFFFF")                    # Hintergrundfarbe
+root.config(background="#______")                    # Hintergrundfarbe
 
-root.mainloop()
+root.________()

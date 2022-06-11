@@ -46,23 +46,27 @@ def distanz():
     distanz = (TimeElapsed * 34300) / 2
 
     return distanz
+#------------------------------------------------Schritt 3------------------------------------------------#
+___ messen():
+    while True:
+        abstand = distanz()
+        print('Gemessene Entfernung: %.1f cm' % abstand)
+        if (abstand > 50):
+            print('Kanban-Behälter ist leer.')
+            update(19)
+        elif (abstand < 50):
+            print('Kanban-Behälter ist gefüllt.')
+            update(18)
+        time.sleep(2)
 
-#  Endlosschleife Ultraschallsensor
-while True:
-    abstand = distanz()
-    print('Gemessene Entfernung: %.1f cm' % abstand)
-    if (abstand > 50):
-        print('Kanban-Behälter ist leer.')
-        update(19)
-    elif (abstand < 50):
-        print('Kanban-Behälter ist gefüllt.')
-        update(18)
-    time.sleep(2)
+#  Separater Thread für den Ultraschallsensor
+secondaryThread = Thread(target=______)
+secondaryThread._____()
 
 #  Fenster einrichten
 root = Tk()                                          # Fenster
 root.geometry('1600x900')                            # Größe
-root.title('Kanbanvisualisierung')                   # Titel
+root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
 
 root.mainloop()

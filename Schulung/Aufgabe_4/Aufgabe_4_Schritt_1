@@ -1,7 +1,8 @@
 import RPi.GPIO as GPIO
 import time
+#------------------------------------------------Schritt 1------------------------------------------------#
 from tkinter import *
-from threading import Thread
+from threading import ______
 
 #  GPIO Pins einrichten
 GPIO.setmode(GPIO.BCM)                               # GPIO Modus (BOARD / BCM)
@@ -58,11 +59,3 @@ while True:
         print('Kanban-Behälter ist gefüllt.')
         update(18)
     time.sleep(2)
-
-#  Fenster einrichten
-root = Tk()                                          # Fenster
-root.geometry('1600x900')                            # Größe
-root.title('Kanbanvisualisierung')                   # Titel
-root.config(background="#FFFFFF")                    # Hintergrundfarbe
-
-root.mainloop()

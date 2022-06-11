@@ -48,24 +48,18 @@ def distanz():
     return distanz
 
 def messen():
-    try:
-        while True:
-            abstand = distanz()
-            print('Gemessene Entfernung: %.1f cm' % abstand)
-            if (abstand > 50):
-                print('Kanban-Behälter ist leer.')
-                update(19)
-            elif (abstand < 50):
-                print('Kanban-Behälter ist gefüllt.')
-                update(18)
-            time.sleep(2)
+    while True:
+        abstand = distanz()
+        print('Gemessene Entfernung: %.1f cm' % abstand)
+        if (abstand > 50):
+            print('Kanban-Behälter ist leer.')
+            update(19)
+        elif (abstand < 50):
+            print('Kanban-Behälter ist gefüllt.')
+            update(18)
+        time.sleep(2)
 
-    # Beim Abbruch durch STRG+C resetten
-    except KeyboardInterrupt:
-        print('Messung vom User gestoppt')
-        GPIO.cleanup()
-
-#  Separater Thread für Waage
+#  Separater Thread für den Ultraschallsensor
 secondaryThread = Thread(target=messen)
 secondaryThread.start()
 
@@ -74,4 +68,5 @@ root = Tk()                                          # Fenster
 root.geometry('1600x900')                            # Größe
 root.wm_title('Kanbanvisualisierung')                # Titel
 root.config(background="#FFFFFF")                    # Hintergrundfarbe
+
 root.mainloop()
